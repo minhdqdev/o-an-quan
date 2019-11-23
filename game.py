@@ -7,7 +7,7 @@ Authors:
 '''
 import random
 import copy
-import pygame
+import pygame,sys
 import math
 import time
 import concurrent.futures
@@ -26,7 +26,7 @@ class Game:
         
         self.table = TableGUI(self.screen)
 
-        self.bots = [Bot(0, algo_0, self.screen), Bot(1, algo_1, self.screen)]
+        self.bots = [Bot(0, algo_0, self.screen, self.table), Bot(1, algo_1, self.screen, self.table)]
         self.move = None
 
     def redraw(self):
@@ -40,7 +40,7 @@ class Game:
 
     def run(self):
         # setup
-        executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+        # executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
         turn = 0 if USER_GO_FIRST else 1
         running = True
 
@@ -50,25 +50,24 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                    break
+                    pygame.quit();sys.exit()					
+                    
 
             # find the best move
-            future = executor.submit(self.bots[turn].execute, self.table.state, self.table.player_points)
-            move = future.result()
+            # future = executor.submit(self.bots[turn].execute, self.table.state, self.table.player_points)
+            # move = future.result()
+            move = self.bots[turn].execute(self.table.state, self.table.player_points)
             self.update(move)
 
             print(f"USER_{turn}'s move: {move[0]} {move[1]}")
 
             turn ^= 1
             self.redraw()
+            print(self.table)
+            # time.sleep(1)
             # executor.submit(self.redraw)
-
-        if running:
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        break
-        else:
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    break
+                    pygame.quit()
+                    sys.exit()

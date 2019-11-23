@@ -91,12 +91,6 @@ class Table:
         self.player_points = [0, 0]
         self.quanvalue = QUANVALUE
 
-        # pygame.init()
-
-        # self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        # pygame.display.set_caption('O An Quan v0.5')
-        # self.background = pygame.image.load(os.path.join(RES, 'background'))
-    
     def __str__(self):
         return '''
             11 10  9  8  7  6 
@@ -138,7 +132,6 @@ class Table:
         return
 
 if __name__ == '__main__':
-    # pygame.init()
     table = Table()
 
     print(table)

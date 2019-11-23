@@ -21,8 +21,7 @@ QUANVALUE = 5
 STATISTIC = [0, 0, 0]
 TOTAL_SCORE_ = [0, 0]
 HIGHEST_ = [0,0]
-Lbutton = pygame.image.load(os.path.join(RES, 'left.png'))
-Rbutton = pygame.image.load(os.path.join(RES, 'right.png'))
+
 
 COLOR = Color()
 
@@ -73,7 +72,8 @@ class TableGUI(Table):
     '''
     def __init__(self, screen=None):
         super().__init__()
-
+        self.screen = screen
+        
         if screen is None:
             pygame.init()
             self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -83,8 +83,6 @@ class TableGUI(Table):
     def __draw_table(self):
         self.screen.fill((255, 255, 255))
         self.screen.blit(background, (0, 0))
-        self.screen.blit(Lbutton, (30, 30))
-        self.screen.blit(Rbutton, (60, 30))
         text_to_screen(self.screen, "Player 1", 200, 60, 25, COLOR.ORANGE)
         text_to_screen(self.screen, str(self.player_points[1]), 370, 40, 50, COLOR.ORANGE)
         text_to_screen(self.screen, "Player 0", 470, 380, 25, COLOR.ORANGE)
