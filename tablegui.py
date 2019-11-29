@@ -10,13 +10,15 @@ from math import pi as PI
 from config import *
 from table import Table
 
+from table import*
+
 background = pygame.image.load(os.path.join(RES, 'background.png'))   
 
 # Properties definiton
 O_DAN = (50, 50)
 O_QUAN = (100, 100)  # ve hinh elipe, (x, y) nghia la truc ngan, truc dai
 DAN = pygame.image.load(os.path.join(RES, 'dan.png'))
-QUAN = pygame.image.load(os.path.join(RES, 'quan.png'))
+QUAN = pygame.image.load(os.path.join(RES, 'quan1.png'))
 QUANVALUE = 5
 STATISTIC = [0, 0, 0]
 TOTAL_SCORE_ = [0, 0]
@@ -73,22 +75,27 @@ class TableGUI(Table):
     def __init__(self, screen=None):
         super().__init__()
         self.screen = screen
-        
+        # self.turn = Game().run().turn
         if screen is None:
             pygame.init()
             self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             pygame.display.set_caption(SCREEN_CAPTION)
 
 
-    def __draw_table(self):
+    def __draw_table(self, turn):
         self.screen.fill((255, 255, 255))
         self.screen.blit(background, (0, 0))
-        text_to_screen(self.screen, "Player 1", 200, 60, 25, COLOR.ORANGE)
-        text_to_screen(self.screen, str(self.player_points[1]), 370, 40, 50, COLOR.ORANGE)
-        text_to_screen(self.screen, "Player 0", 470, 380, 25, COLOR.ORANGE)
-        text_to_screen(self.screen, str(self.player_points[0]), 370, 365, 50, COLOR.ORANGE)
-        # text_to_screen(self.screen, "Player " + str(self.turn) + "'s move: " + str(self.Move[0]) + "-" + str(self.Move[1]), 110, 200, 30, BLACK)
+        text_to_screen(self.screen, "Player 1", 200, 60, 25, COLOR.DARKRED)
+        text_to_screen(self.screen, str(self.player_points[1]), 370, 40, 50, COLOR.DARKRED)
+        text_to_screen(self.screen, "Player 0", 470, 380, 25, COLOR.PURPLE)
+        text_to_screen(self.screen, str(self.player_points[0]), 370, 365, 50, COLOR.PURPLE)
+        if turn == 0:
+            text_to_screen(self.screen, "Player " + str(turn) + " is thinking...", 300, 450, 20 , COLOR.PURPLE)
+        else:
+            text_to_screen(self.screen, "Player " + str(turn) + " is thinking...", 300, 10, 20, COLOR.RED)
         # text_to_screen(self.screen, str(self.winner), 150, 250, 25, RED)
+
+
 
         # So quan trong cac o
         text_to_screen(self.screen, str(self.state[11][0]), 170, 150, 20, COLOR.ORANGE) #No. 11
@@ -159,8 +166,8 @@ class TableGUI(Table):
 
         pygame.display.flip()
     
-    def redraw(self):
-        self.__draw_table()
+    def redraw(self, turn):
+        self.__draw_table(turn)
 
 if __name__ == '__main__':
     table = TableGUI()

@@ -3,9 +3,26 @@
 Author: minhdq99hp
 '''
 from config import *
-import epdb
 import os
 from copy import deepcopy
+import pygame
+from tkinter import *
+from tkinter import messagebox
+from config import *
+import time
+
+COLOR = Color()
+
+def text_to_screen(screen, text, x, y, fontsize, color):
+    try:
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Comic Sans MS', fontsize)
+        textsurface = myfont.render(text, True, color)
+        screen.blit(textsurface, (x, y))
+
+    except Exception as e:
+        print('Font Error')
+        raise e
 
 def ipos(pos, inc=1):
     '''get increased position'''
@@ -29,7 +46,7 @@ def fill_if_empty(_state, _player_points):
     return state, player_points
 
 def finished(_state):
-    return _state[0] == [0, 2] and _state[6] == [0, 2]
+    return  _state[0] == [0, 2] and _state[6] == [0, 2]
 
 def play_turn(_state, _player_points, _move, quanvalue=5):
     state, player_points = deepcopy(_state), deepcopy(_player_points)
@@ -45,7 +62,7 @@ def play_turn(_state, _player_points, _move, quanvalue=5):
     for _ in range(state[cur_pos][0]):
         state[next_pos][0] += 1
         next_pos = ipos(next_pos, inc)
-    state[cur_pos][0] = 0
+    state[cur_pos][0] //= 12
 
     while True:
         state, player_points = fill_if_empty(state, player_points)
@@ -76,7 +93,7 @@ def play_turn(_state, _player_points, _move, quanvalue=5):
             for _ in range(state[cur_pos][0]):
                 state[next_pos][0] += 1
                 next_pos = ipos(next_pos, inc)
-            state[cur_pos][0] = 0
+            state[cur_pos][0] //= 12
 
     return state, player_points
 
@@ -121,11 +138,32 @@ class Table:
 
     def finished(self):
         '''Checking whether if Game is finished'''
-        return finished(self.state)
+        if finished(self.state):
+            if self.player_points[0] > self.player_points[1]:
+                result = 'You win'
+            elif self.player_points[0] < self.player_points[1]:
+                result = 'Computer wins'
+            else: result = 'Draw'
+            print("END!!")
+            # endscreen = pygame.display.set_mode((400, 300))
+            # text_to_screen(endscreen, 'Winnwer is ' + winner, 0, 0, 20, COLOR.WHITE)
+            while True:
+                Tk().wm_withdraw()  # to hide the main window
+                messagebox.showinfo('GAME OVER', 'Result: ' + result)
+                time.sleep(1)
+                break
+            return True
+        else:
+            return False
 
     def play(self, move):
         self.state, self.player_points = play_turn(self.state, self.player_points, move)
-        self.redraw()
+        if finished(self.state):
+            self.player_points[0] += sum([self.state[i][0] for i in range(1, 6)])
+            self.player_points[1] += sum([self.state[i][0] for i in range(7, 12)])
+            for i in range(0, 12):
+                self.state[i][0] = 0
+        self.redraw(1)
     
     def redraw(self):
 
