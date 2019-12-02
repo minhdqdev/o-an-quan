@@ -60,10 +60,10 @@ class Bot:
         cur_pos = move[0]
         next_pos = (cur_pos + inc) % 12
 
-        while state[cur_pos][0]:
-            state[cur_pos][0] -= 1
+        for _ in range(state[cur_pos][0]):
             state[next_pos][0] += 1
             next_pos = (next_pos + inc) % 12
+        state[cur_pos][0] //= 12
 
         while True:
             if state[next_pos][1] or (state[next_pos][0] == 0 and state[(next_pos + inc) % 12][0] == 0 and
@@ -80,10 +80,10 @@ class Bot:
                     next_pos = (next_pos + inc * 2) % 12
             else:
                 cur_pos = next_pos
-                while state[cur_pos][0]:
-                    state[cur_pos][0] -= 1
+                for _ in range(state[cur_pos][0]):
                     state[next_pos][0] += 1
                     next_pos = (next_pos + inc) % 12
+                state[cur_pos][0] //= 12
 
     def alpha_beta(self, state_game, cur_point, depth=3):
         ## Depth_limited_search
@@ -133,7 +133,7 @@ class Bot:
                 opt_action = move
             alpha = max(alpha, score)
         # print(opt_action);input()
-        return opt_action
+        return self.get_available_move(state_game, self.player_id)[0] if opt_action == None else opt_action
 
     def expectimax(self, state_game, cur_point, depth=3):
         # number_agent = 2 # self define
@@ -162,10 +162,10 @@ class Bot:
                     else:
                         maxAlpha += 1 / len(list_valid_move) * result[1]
                         best_move = move
-
+                best_move = list_valid_move[0] if best_move == "" else best_move
                 return (best_move, maxAlpha)
 
-        ## return move, point,
+        ## return move, point
         return generate_agent(state_game, cur_point, depth)[0]
 
     def random_algo(self, state_game):
@@ -186,7 +186,7 @@ class Bot:
     def human(self, state_game, cur_point):
         move = [None, None]
         old_box = 0
-        self.table.redraw()
+        self.table.redraw(0)
         x, y = 0, 0
         isClicked = False
 
@@ -219,9 +219,9 @@ class Bot:
                         continue
 
                     if move[0] != old_box:
-                        self.table.redraw()
-                        self.screen.blit(Lbutton, (160, 276))
-                        self.screen.blit(Rbutton, (228, 276))
+                        self.table.redraw(0)
+                        self.screen.blit(Lbutton, (165, 315))
+                        self.screen.blit(Rbutton, (233, 315))
                         old_box = move[0]
 
                     if isClicked:
@@ -233,9 +233,9 @@ class Bot:
                         continue
 
                     if move[0] != old_box:
-                        self.table.redraw()
-                        self.screen.blit(Lbutton, (260, 276))
-                        self.screen.blit(Rbutton, (328, 276))
+                        self.table.redraw(0)
+                        self.screen.blit(Lbutton, (265, 315))
+                        self.screen.blit(Rbutton, (333, 315))
                         old_box = move[0]
 
                     if isClicked:
@@ -246,9 +246,9 @@ class Bot:
                         continue
 
                     if move[0] != old_box:
-                        self.table.redraw()
-                        self.screen.blit(Lbutton, (360, 276))
-                        self.screen.blit(Rbutton, (428, 276))
+                        self.table.redraw(0)
+                        self.screen.blit(Lbutton, (360, 315))
+                        self.screen.blit(Rbutton, (428, 315))
                         old_box = move[0]
 
                     if isClicked:
@@ -259,9 +259,9 @@ class Bot:
                         continue
 
                     if move[0] != old_box:
-                        self.table.redraw()
-                        self.screen.blit(Lbutton, (460, 276))
-                        self.screen.blit(Rbutton, (528, 276))
+                        self.table.redraw(0)
+                        self.screen.blit(Lbutton, (460, 315))
+                        self.screen.blit(Rbutton, (528, 315))
                         old_box = move[0]
 
                     if isClicked:
@@ -272,19 +272,19 @@ class Bot:
                         continue
 
                     if move[0] != old_box:
-                        self.table.redraw()
-                        self.screen.blit(Lbutton, (560, 276))
-                        self.screen.blit(Rbutton, (628, 276))
+                        self.table.redraw(0)
+                        self.screen.blit(Lbutton, (560, 315))
+                        self.screen.blit(Rbutton, (628, 315))
                         old_box = move[0]
 
                     if isClicked:
                         move[1] = 'l' if x < 610 else 'r'
                 else:
-                    self.table.redraw()
+                    self.table.redraw(0)
                     old_box = 0
 
             else:
-                self.table.redraw()
+                self.table.redraw(0)
                 old_box = 0
 
             pygame.display.flip()
@@ -300,6 +300,7 @@ class Bot:
         elif self.algo == "random":
             return self.random_algo(state_game)            
         elif self.algo == "alpha_beta":
+            depth = 5 if len(self.get_available_move(state_game,self.player_id))<5 else depth
             return self.alpha_beta(state_game, cur_point, depth)
         elif self.algo == "expectimax":
             return self.expectimax(state_game, cur_point, depth=2)
