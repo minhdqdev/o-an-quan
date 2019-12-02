@@ -3,7 +3,7 @@ This is my mini project in Artificial Intelligent course. We have experimented a
 
 
 ## Contributors
-- Dang Quang Minh (me): construct game logic and design program architecture.
+- Dang Quang Minh (leader): construct game logic and design program architecture.
 - Le Tuan Son: implement two AI algorithms minimax and expectimax.
 - Nguyen Tri Hung: build game UI.
 - Nguyen Viet Hoang: write report.
@@ -13,8 +13,17 @@ This is my mini project in Artificial Intelligent course. We have experimented a
 - Python 3.6
 - Libaries: pygame, tkinter,...
 
+```
+python3 -m pip install pygame
+```
+
 ## Usage
 ```
 python main.py
 ```
+
+## Demo
+![demo1](docs/demo1.png)
+
+![demo2](docs/demo2.png)
 
